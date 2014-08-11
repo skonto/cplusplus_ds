@@ -25,15 +25,18 @@
 #include <set>
 #include <vector>
 #include <map>
-#include<stdexcept>
-#include<stack>
+#include <stdexcept>
+#include <stack>
 #include <iostream>
-
+#include <chrono>
+#include <random>
 
 namespace ds{
 
 
 class Alphabet{
+
+friend class RandomCharStream;
 
 public:
 
@@ -53,17 +56,46 @@ void printAlphabetChars();
 
 int getIndex(char c);
 
-int getAlphabetSize();
+int getAlphabetSize() const;
 
 void validateAgainstAlphabet(std::string);
+
+class RandomCharStream;
+
+static ds::Alphabet::RandomCharStream* getRandomCharStream(const ds::Alphabet& a);
+
+
+class RandomCharStream{
+
+public:
+
+char getNextRandomChar();
+
+std::string getNextRandomString(int);
+
+
+RandomCharStream(const ds::Alphabet&);
+
+virtual ~RandomCharStream();
+
+
+private:
+
+	const unsigned seed= std::chrono::system_clock::now().time_since_epoch().count();
+
+        std::default_random_engine* generator;
+        
+	std::uniform_int_distribution<int>* distr;
+
+	const Alphabet& aRef;
+
+};
 
 private:
 
 std::vector<char> alph;
 
 std::map <char, int> alphIndex; //latter could be unsigned char
-
-
 
 };
 
@@ -121,6 +153,8 @@ void printAlphabet();
 
 std::set<T> getAllValues(std::string key);
 
+Alphabet& getDefaultAlphabet();
+
 private:
 
 class TNode;
@@ -129,7 +163,7 @@ long _size;
 
 static char defaultAlphabet[];
 
-static Alphabet& defaultA;
+static Alphabet defaultA;
 
 Alphabet& a;
 
@@ -147,7 +181,7 @@ public:
 	TNode(int, bool);
     
 	virtual ~TNode();
-		
+			
 private:
 	bool leaf; //leaves are the data nodes
 	std::set<T> values; //allow multiple entries per key
@@ -172,8 +206,8 @@ char ds::Trie<T>::defaultAlphabet[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 		'w', 'x', 'y', 'z' };
 
 template<typename T>
-ds::Alphabet& ds::Trie<T>::defaultA = *(new ds::Alphabet(
-		ds::Trie<T>::defaultAlphabet, sizeof(ds::Trie<T>::defaultAlphabet)));
+ds::Alphabet ds::Trie<T>::defaultA(
+		ds::Trie<T>::defaultAlphabet, sizeof(ds::Trie<T>::defaultAlphabet));
 
 template<typename T>
 ds::Trie<T>::Trie() :
@@ -188,7 +222,7 @@ ds::Trie<T>::Trie(Alphabet& alph) :
 
 template<typename T>
 ds::Trie<T>::~Trie() {
-	delete &defaultA;
+	
 }
 
 //copy constructor
@@ -238,7 +272,7 @@ void ds::Trie<T>::add(std::string key, const T& data) {
 		throw std::invalid_argument("key cannot be emtpy...");
 	}
 
-(this->a).validateAgainstAlphabet(key);
+        (this->a).validateAgainstAlphabet(key);
 
 	if (_size == 0) {
 		//create new root
@@ -495,6 +529,13 @@ template<typename T>
 std::set<T> ds::Trie<T>::getAllValues(std::string key) {
 std::set<T> s;
 return s;
+
+}
+
+template<typename T>
+ds::Alphabet& ds::Trie<T>::getDefaultAlphabet(){
+
+return this->defaultA;
 
 }
 

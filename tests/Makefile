@@ -18,7 +18,7 @@ exec :  $(OBJS)
 		
 	
 $(DEP_FILE):
-	    @$(CC) -M -I$(INCLUDES) $(SRC) >> $(DEP_FILE)
+	    @$(CC) $(CPPFLAGS) -M -I$(INCLUDES) $(SRC) >> $(DEP_FILE)
 	
 ifeq ($(findstring $(MAKECMDGOALS), all,  $(DEP_FILE)), )
 include $(DEP_FILE)	

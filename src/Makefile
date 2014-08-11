@@ -16,7 +16,7 @@ LIB :  $(OBJS)
 		@$(CC) $(CPPFLAGS) $(INC) -c $< -o $@
 			
 $(DEP_FILE):
-	    	@$(CC) -M -I$(INCLUDES) $(SRC) >> $(DEP_FILE)
+	    	@$(CC)  $(CPPFLAGS) -M -I$(INCLUDES) $(SRC) >> $(DEP_FILE)
 	
 ifeq ($(findstring $(MAKECMDGOALS), all, LIB), )
 include $(DEP_FILE)	

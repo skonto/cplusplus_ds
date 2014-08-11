@@ -23,6 +23,8 @@
 #include <iostream>
 #include <algorithm> 
 #include <stdexcept>
+#include <chrono>
+#include <random>
 
 //ALPHABET
 
@@ -78,7 +80,7 @@ int ds::Alphabet::getIndex(char c) {
 
 }
 
-int ds::Alphabet::getAlphabetSize() {
+int ds::Alphabet::getAlphabetSize() const {
 
 	return this->alph.size();
 }
@@ -96,6 +98,52 @@ for ( unsigned int i = 0 ; i < input.length(); i++)
   }
 
 }
+
+
+ds::Alphabet::RandomCharStream::RandomCharStream(const ds::Alphabet& a):aRef(a){
+
+this->generator = new std::default_random_engine(this->seed);
+this->distr =new std::uniform_int_distribution<int>(0,a.getAlphabetSize());
+
+}
+
+ds::Alphabet::RandomCharStream::~RandomCharStream(){
+
+delete this->generator;
+delete this->distr;
+
+
+}
+
+ds::Alphabet::RandomCharStream* ds::Alphabet::getRandomCharStream(const ds::Alphabet& a){
+
+return new ds::Alphabet::RandomCharStream(a);
+
+}
+
+char ds::Alphabet::RandomCharStream::getNextRandomChar(){
+
+return (this->aRef).alph.at((*(this->distr))(*generator));
+
+
+}
+
+std::string ds::Alphabet::RandomCharStream::getNextRandomString(int length){
+
+std::vector<char> temp;
+
+for(int i=0; i<length; ++i){
+
+	temp.push_back(getNextRandomChar());
+} 
+
+std::string str(temp.begin(),temp.end());
+
+return str;
+}
+
+
+
 
 
 
