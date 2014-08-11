@@ -103,7 +103,7 @@ for ( unsigned int i = 0 ; i < input.length(); i++)
 ds::Alphabet::RandomCharStream::RandomCharStream(const ds::Alphabet& a):aRef(a){
 
 this->generator = new std::default_random_engine(this->seed);
-this->distr =new std::uniform_int_distribution<int>(0,a.getAlphabetSize());
+this->distr =new std::uniform_int_distribution<int>(0,a.getAlphabetSize()-1);
 
 }
 
