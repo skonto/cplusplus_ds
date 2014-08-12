@@ -19,6 +19,10 @@
 //
 // ---------------------------------------------------------------------------
 
+/*! \file trie.h
+      \brief Place for template implementation of trie and other useful definitions.
+*/
+
 #ifndef TRIE_H
 #define TRIE_H
 #include <string>
@@ -30,6 +34,8 @@
 #include <iostream>
 #include <chrono>
 #include <random>
+
+
 
 namespace ds{
 
@@ -111,9 +117,9 @@ virtual std::set<T> remove(std::string key) =0;
 
 virtual bool contains(std::string key) =0;
 
-virtual std::set<std::string> getAllKeys() =0;
+virtual std::set<std::string> getAllKeys() =0;  //not implemented yet
 
-virtual std::set<T> getAllValues(std::string key) =0;
+virtual std::set<T> getAllValues(std::string key) =0; //not implemented yet
 
 virtual ~TrieI(){};
 
